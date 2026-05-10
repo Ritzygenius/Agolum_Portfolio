@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0A192F"/>
+  <rect x="70" y="70" width="1060" height="490" rx="24" fill="#ffffff"/>
+  <text x="120" y="210" fill="#0A192F" font-family="Arial" font-size="68" font-weight="900">Chinagolum Arinzechukwu Igwe</text>
+  <text x="120" y="295" fill="#D4AF37" font-family="Arial" font-size="34" font-weight="800">Tech Leader | Digital Strategist | ICT Policy Advisor</text>
+  <text x="120" y="380" fill="#334155" font-family="Arial" font-size="30">Empowering individuals, organizations, and governments</text>
+  <text x="120" y="424" fill="#334155" font-family="Arial" font-size="30">through technology, education, and innovation.</text>
+  <circle cx="1010" cy="410" r="86" fill="#10B981"/>
+  <circle cx="960" cy="330" r="56" fill="#D4AF37"/>
+</svg>

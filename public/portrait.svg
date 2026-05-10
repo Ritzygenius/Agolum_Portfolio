@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100" viewBox="0 0 900 1100" role="img" aria-label="Professional portrait placeholder">
+  <rect width="900" height="1100" fill="#0A192F"/>
+  <circle cx="450" cy="305" r="155" fill="#D4AF37"/>
+  <circle cx="450" cy="315" r="118" fill="#f2d59d"/>
+  <path d="M235 1050c22-250 126-394 215-394s193 144 215 394H235Z" fill="#ffffff"/>
+  <path d="M315 1050c12-204 70-322 135-322s123 118 135 322H315Z" fill="#10B981"/>
+  <path d="M270 570c78-52 145-78 180-78s102 26 180 78v120H270V570Z" fill="#D4AF37"/>
+  <text x="450" y="1000" fill="#0A192F" font-family="Arial" font-size="44" font-weight="800" text-anchor="middle">CHINAGOLUM IGWE</text>
+</svg>
