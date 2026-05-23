@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ExternalLink, Github, PlayCircle } from "lucide-react";
+import { ExternalLink, Globe, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/lib/data";
 import { getProjectBySlug } from "@/lib/content";
@@ -47,7 +47,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{project.full_description}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             {project.live_url && <Button href={project.live_url}><ExternalLink className="size-4" /> Live URL</Button>}
-            {project.github_url && <Button href={project.github_url} variant="outline"><Github className="size-4" /> GitHub</Button>}
+            {project.github_url && <Button href={project.github_url} variant="outline"><Globe className="size-4" /> GitHub</Button>}
             {project.video_url && <Button href={project.video_url} variant="secondary"><PlayCircle className="size-4" /> Video</Button>}
           </div>
         </div>
