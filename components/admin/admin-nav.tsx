@@ -2,16 +2,15 @@ import Link from "next/link";
 import { signOut } from "@/app/actions";
 
 const items = [
-  ["Overview", "/admin"],
+  ["Dashboard", "/admin"],
+  ["Profile / Site Settings", "/admin/settings"],
   ["Projects", "/admin/projects"],
+  ["Blog", "/admin/blog"],
   ["Achievements", "/admin/achievements"],
   ["Certifications", "/admin/certifications"],
   ["Testimonials", "/admin/testimonials"],
   ["Services", "/admin/services"],
-  ["Blog", "/admin/blog"],
   ["Messages", "/admin/messages"],
-  ["Settings", "/admin/settings"],
-  ["Media", "/admin/media"],
 ];
 
 export function AdminNav() {

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/lib/data";
 import { getProjectBySlug } from "@/lib/content";
@@ -48,6 +48,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <div className="mt-8 flex flex-wrap gap-3">
             {project.live_url && <Button href={project.live_url}><ExternalLink className="size-4" /> Live URL</Button>}
             {project.github_url && <Button href={project.github_url} variant="outline"><Github className="size-4" /> GitHub</Button>}
+            {project.video_url && <Button href={project.video_url} variant="secondary"><PlayCircle className="size-4" /> Video</Button>}
           </div>
         </div>
       </section>
@@ -73,7 +74,37 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
         </div>
+        {project.video_url ? (
+          <div className="mx-auto mt-12 max-w-5xl">
+            <div className="aspect-video overflow-hidden rounded-2xl border border-navy/10 bg-navy dark:border-white/10">
+              <iframe src={toEmbedUrl(project.video_url)} title={`${project.title} video`} className="h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+            </div>
+          </div>
+        ) : null}
+        {project.project_images?.length ? (
+          <div className="mx-auto mt-12 grid max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {project.project_images.map((image) => (
+              <Image key={image.id || image.image_url} src={image.image_url} alt={image.alt || project.title} width={720} height={480} className="rounded-lg border border-navy/10 object-cover dark:border-white/10" />
+            ))}
+          </div>
+        ) : null}
       </section>
     </article>
   );
+}
+
+function toEmbedUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : url;
+    }
+    if (parsed.hostname.includes("youtu.be")) return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`;
+    if (parsed.hostname.includes("vimeo.com")) return `https://player.vimeo.com/video/${parsed.pathname.split("/").filter(Boolean).pop()}`;
+    if (parsed.hostname.includes("loom.com")) return url.replace("/share/", "/embed/");
+    return url;
+  } catch {
+    return url;
+  }
 }

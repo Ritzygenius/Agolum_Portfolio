@@ -22,6 +22,11 @@ export type Database = {
           whatsapp_number: string | null;
           portrait_url: string | null;
           cv_url: string | null;
+          calendly_url: string | null;
+          instagram_url: string | null;
+          facebook_url: string | null;
+          linkedin_url: string | null;
+          x_url: string | null;
         };
         Insert: Partial<Database["public"]["Tables"]["profiles"]["Row"]> & { full_name: string };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Row"]>;
@@ -48,6 +53,7 @@ export type Database = {
           category: string | null;
           live_url: string | null;
           github_url: string | null;
+          video_url: string | null;
           featured: boolean | null;
           published: boolean | null;
           completed_at: string | null;

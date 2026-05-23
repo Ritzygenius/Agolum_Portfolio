@@ -14,7 +14,12 @@ create table public.profiles (
   phone text,
   whatsapp_number text,
   portrait_url text,
-  cv_url text
+  cv_url text,
+  calendly_url text,
+  instagram_url text,
+  facebook_url text,
+  linkedin_url text,
+  x_url text
 );
 
 create table public.admin_users (
@@ -56,6 +61,7 @@ create table public.projects (
   category text,
   live_url text,
   github_url text,
+  video_url text,
   featured boolean default false,
   published boolean default true,
   completed_at date,
@@ -225,20 +231,21 @@ create policy "Admins can manage socials" on public.social_links for all using (
 insert into storage.buckets (id, name, public) values
   ('profile-images', 'profile-images', true),
   ('project-images', 'project-images', true),
+  ('blog-images', 'blog-images', true),
   ('certificates', 'certificates', true),
   ('resumes', 'resumes', true),
   ('testimonials', 'testimonials', true)
 on conflict (id) do nothing;
 
 create policy "Public can read portfolio storage" on storage.objects
-for select using (bucket_id in ('profile-images', 'project-images', 'certificates', 'resumes', 'testimonials'));
+for select using (bucket_id in ('profile-images', 'project-images', 'blog-images', 'certificates', 'resumes', 'testimonials'));
 
 create policy "Admins can upload portfolio storage" on storage.objects
-for insert with check (bucket_id in ('profile-images', 'project-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());
+for insert with check (bucket_id in ('profile-images', 'project-images', 'blog-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());
 
 create policy "Admins can update portfolio storage" on storage.objects
-for update using (bucket_id in ('profile-images', 'project-images', 'certificates', 'resumes', 'testimonials') and public.is_admin())
-with check (bucket_id in ('profile-images', 'project-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());
+for update using (bucket_id in ('profile-images', 'project-images', 'blog-images', 'certificates', 'resumes', 'testimonials') and public.is_admin())
+with check (bucket_id in ('profile-images', 'project-images', 'blog-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());
 
 create policy "Admins can delete portfolio storage" on storage.objects
-for delete using (bucket_id in ('profile-images', 'project-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());
+for delete using (bucket_id in ('profile-images', 'project-images', 'blog-images', 'certificates', 'resumes', 'testimonials') and public.is_admin());

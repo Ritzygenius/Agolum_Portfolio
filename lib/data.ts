@@ -1,18 +1,23 @@
-import type { Achievement, BlogPost, Certification, Project, Service, Testimonial } from "@/types/content";
+import type { Achievement, BlogPost, Certification, Profile, Project, Service, SocialLink, Testimonial } from "@/types/content";
 
-export const profile = {
-  name: "Chinagolum Arinzechukwu Igwe",
-  title: "Tech Leader | Digital Strategist | Program Manager | ICT Policy Advisor | Digital Marketing Expert | Web Developer | Entrepreneur",
+export const profile: Profile = {
+  full_name: "Chinagolum Arinzechukwu Igwe",
+  professional_title: "Tech Leader | Digital Strategist | Program Manager | ICT Policy Advisor | Digital Marketing Expert | Web Developer | Entrepreneur",
   tagline: "Empowering Individuals, Organizations, and Governments Through Technology, Education, and Innovation.",
+  summary:
+    "Experienced technology leader, digital strategist, educator, and ICT policy advisor with over 10 years of experience in program management, digital marketing, web development, youth empowerment, and government technology transformation.",
+  portrait_url: "/agolu-agolu.jpeg",
+  cv_url: "https://drive.google.com/file/d/1vmj6s-yRqxFz4n5HHZyMWFE_MCgML67L/view?usp=drive_link",
+  calendly_url: "https://calendly.com/agolumarinze",
   location: "Enugu, Nigeria",
   nationality: "Nigerian",
   email: "agolumarinze@gmail.com",
-  phone: "+2349048127607",
-  whatsapp: "2349048127607",
-  summary:
-    "Experienced technology leader, digital strategist, educator, and ICT policy advisor with over 10 years of experience in program management, digital marketing, web development, youth empowerment, and government technology transformation.",
-  portrait: "/portrait.svg",
-  cvUrl: "/chinagolum-igwe-cv.pdf",
+  phone: "09048127607",
+  whatsapp_number: "09048127607",
+  instagram_url: "https://www.instagram.com/ritzyagolum?igsh=OW00NHdhcmE5dnh5",
+  facebook_url: "https://www.facebook.com/igwea",
+  linkedin_url: "#",
+  x_url: "https://x.com/Ritzygeniusa",
 };
 
 export const metrics = [
@@ -263,10 +268,13 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
-export const socialLinks = [
-  { label: "LinkedIn", href: "#" },
-  { label: "GitHub", href: "#" },
-  { label: "X", href: "#" },
-  { label: "Facebook", href: "#" },
-  { label: "WhatsApp", href: `https://wa.me/${profile.whatsapp}` },
-];
+export function getSocialLinks(source: Profile = profile): SocialLink[] {
+  return [
+    { label: "Instagram", href: source.instagram_url },
+    { label: "Facebook", href: source.facebook_url },
+    { label: "LinkedIn", href: source.linkedin_url },
+    { label: "X", href: source.x_url },
+  ].filter((link) => Boolean(link.href && link.href !== "#")) as SocialLink[];
+}
+
+export const socialLinks = getSocialLinks(profile);

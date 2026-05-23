@@ -19,9 +19,10 @@ export function CrudForm({ table, fields }: { table: string; fields: Field[] }) 
       className="grid gap-4 rounded-lg border border-navy/10 bg-white p-6 dark:border-white/10 dark:bg-white/5"
       onSubmit={(event) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
+        const form = event.currentTarget;
+        const formData = new FormData(form);
         startTransition(async () => upsertAdminRecord(table, formData));
-        event.currentTarget.reset();
+        form.reset();
       }}
     >
       <div className="grid gap-4 md:grid-cols-2">

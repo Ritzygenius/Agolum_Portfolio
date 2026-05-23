@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { blogPosts, profile } from "@/lib/data";
-import { getBlogPostBySlug } from "@/lib/content";
+import { getBlogPostBySlug, getProfile } from "@/lib/content";
 import { siteUrl } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -21,14 +22,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const [post, liveProfile] = await Promise.all([getBlogPostBySlug(slug), getProfile()]);
   if (!post) notFound();
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
     description: post.excerpt,
-    author: { "@type": "Person", name: profile.name },
+    author: { "@type": "Person", name: liveProfile.full_name || profile.full_name },
     datePublished: post.published_at,
   };
 
@@ -38,6 +39,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
       <div className="mx-auto max-w-3xl">
         <p className="text-sm font-black uppercase tracking-[0.22em] text-gold">{post.category}</p>
         <h1 className="mt-5 text-4xl font-black tracking-tight text-navy sm:text-6xl dark:text-white">{post.title}</h1>
+        {post.featured_image_url ? (
+          <Image src={post.featured_image_url} alt="" width={1200} height={720} className="mt-8 rounded-2xl border border-navy/10 object-cover dark:border-white/10" />
+        ) : null}
         <div className="mt-8 h-1 w-full overflow-hidden rounded bg-slate-200"><div className="h-full w-2/3 bg-gold" /></div>
         <div className="prose-content mt-10 text-lg text-slate-700 dark:text-slate-300">
           {post.content.split(". ").map((paragraph) => <p key={paragraph}>{paragraph.trim()}.</p>)}

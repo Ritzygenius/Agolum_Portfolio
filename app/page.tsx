@@ -6,11 +6,12 @@ import { ProjectCard } from "@/components/site/project-card";
 import { Reveal } from "@/components/site/motion";
 import { Section } from "@/components/site/section";
 import { DynamicIcon } from "@/components/site/icon";
-import { metrics, profile } from "@/lib/data";
-import { getAchievements, getProjects, getServices, getTestimonials } from "@/lib/content";
+import { metrics } from "@/lib/data";
+import { getAchievements, getProfile, getProjects, getServices, getTestimonials } from "@/lib/content";
 
 export default async function Home() {
-  const [liveProjects, liveAchievements, liveServices, liveTestimonials] = await Promise.all([
+  const [liveProfile, liveProjects, liveAchievements, liveServices, liveTestimonials] = await Promise.all([
+    getProfile(),
     getProjects(),
     getAchievements(),
     getServices(),
@@ -25,15 +26,15 @@ export default async function Home() {
           <Reveal>
             <p className="text-sm font-black uppercase tracking-[0.24em] text-gold">Personal brand platform</p>
             <h1 className="mt-5 text-4xl font-black tracking-tight text-navy sm:text-6xl lg:text-7xl dark:text-white">
-              {profile.name}
+              {liveProfile.full_name}
             </h1>
-            <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-slate-700 dark:text-slate-200">{profile.title}</p>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">{profile.summary}</p>
+            <p className="mt-6 max-w-3xl text-lg font-semibold leading-8 text-slate-700 dark:text-slate-200">{liveProfile.professional_title}</p>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">{liveProfile.summary}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="/projects">
                 View Projects <ArrowRight className="size-4" />
               </Button>
-              <Button href={profile.cvUrl} variant="outline">
+              <Button href={liveProfile.cv_url} variant="outline">
                 <Download className="size-4" /> Download CV
               </Button>
               <Button href="/contact" variant="secondary">
@@ -44,7 +45,7 @@ export default async function Home() {
           <Reveal className="relative">
             <div className="absolute -inset-4 rounded-[2rem] border border-gold/30" />
             <div className="relative overflow-hidden rounded-2xl bg-navy shadow-2xl shadow-navy/20">
-              <Image src={profile.portrait} alt="Professional portrait of Chinagolum Arinzechukwu Igwe" width={900} height={1100} priority className="h-auto w-full object-cover" />
+              <Image src={liveProfile.portrait_url || "/portrait.svg"} alt={`Professional portrait of ${liveProfile.full_name}`} width={900} height={1100} priority className="h-auto w-full object-cover" />
             </div>
           </Reveal>
         </div>
@@ -110,7 +111,7 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl rounded-2xl bg-navy p-8 text-white sm:p-12">
           <p className="text-sm font-black uppercase tracking-[0.24em] text-gold">Let’s build what matters</p>
           <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <h2 className="max-w-4xl text-3xl font-black tracking-tight sm:text-5xl">{profile.tagline}</h2>
+            <h2 className="max-w-4xl text-3xl font-black tracking-tight sm:text-5xl">{liveProfile.tagline}</h2>
             <Button href="/contact" variant="secondary">Start a Conversation</Button>
           </div>
           <Link href="/resume" className="mt-6 inline-flex text-sm font-bold text-slate-300 hover:text-gold">View interactive resume</Link>

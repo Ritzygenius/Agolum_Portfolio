@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/site/contact-form";
 import { Section } from "@/components/site/section";
-import { profile, socialLinks } from "@/lib/data";
+import { getSocialLinks } from "@/lib/data";
+import { getProfile } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Contact Chinagolum Arinzechukwu Igwe for ICT consulting, digital strategy, training, web development, and program management.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const profile = await getProfile();
+  const socialLinks = getSocialLinks(profile);
   return (
     <Section eyebrow="Contact" title="Start a high-trust conversation about your next digital move." description="Use the form, email, phone, or WhatsApp. Every serious inquiry is treated with care and clarity.">
       <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]">

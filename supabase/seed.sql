@@ -1,4 +1,4 @@
-insert into public.profiles (full_name, professional_title, tagline, summary, nationality, location, email, phone, whatsapp_number, portrait_url, cv_url)
+insert into public.profiles (full_name, professional_title, tagline, summary, nationality, location, email, phone, whatsapp_number, portrait_url, cv_url, calendly_url, instagram_url, facebook_url, linkedin_url, x_url)
 values (
   'Chinagolum Arinzechukwu Igwe',
   'Tech Leader | Digital Strategist | Program Manager | ICT Policy Advisor | Digital Marketing Expert | Web Developer | Entrepreneur',
@@ -7,10 +7,15 @@ values (
   'Nigerian',
   'Enugu, Nigeria',
   'agolumarinze@gmail.com',
-  '+2349048127607',
-  '2349048127607',
-  '/portrait.svg',
-  '/chinagolum-igwe-cv.pdf'
+  '09048127607',
+  '09048127607',
+  '/agolu-agolu.jpeg',
+  'https://drive.google.com/file/d/1vmj6s-yRqxFz4n5HHZyMWFE_MCgML67L/view?usp=drive_link',
+  'https://calendly.com/agolumarinze',
+  'https://www.instagram.com/ritzyagolum?igsh=OW00NHdhcmE5dnh5',
+  'https://www.facebook.com/igwea',
+  '#',
+  'https://x.com/Ritzygeniusa'
 );
 
 insert into public.services (title, slug, description, outcomes, icon, sort_order) values
@@ -29,9 +34,11 @@ insert into public.achievements (title, organization, description, icon, year, s
 ('Programs Delivery Manager','Career Crest Edu','Managed education programs, training delivery systems, and learner outcomes for professional development cohorts.','GraduationCap','Leadership',5),
 ('CEO','RitzyGenius Enterprise','Builds digital products, consulting engagements, and entrepreneurial programs for organizations and individuals.','BriefcaseBusiness','Founder',6);
 
-insert into public.projects (title, slug, short_description, full_description, challenge, solution, results, technologies, client_name, industry, category, live_url, github_url, featured, published, completed_at, thumbnail_url) values
-('Igbo-Etiti Tech Hub Digital Enablement','igbo-etiti-tech-hub-digital-enablement','A civic technology and youth empowerment initiative for skills, innovation, and local digital transformation.','Program architecture and operational leadership for a public-sector tech hub designed to expand digital access, train young people, and support ICT adoption in local government.','Young people and public institutions needed a practical structure for skills development and technology adoption.','Designed program workflows, training tracks, community engagement systems, and stakeholder reporting rhythms.','Improved visibility for local innovation, created a platform for recurring digital skills programs, and strengthened ICT capacity.', array['Program Design','ICT Policy','Digital Literacy','Stakeholder Management'], 'Igbo-Etiti Local Government','Government','Government Projects','#', null, true, true, '2025-10-01','/project-government.svg'),
-('Learnexity Digital Skills Programs','learnexity-digital-skills-programs','Training systems for digital marketing, productivity, and employability-focused technology education.','End-to-end program leadership for technology and digital marketing learning experiences focused on practical capability, confidence, and career outcomes.','Learners needed structured, market-relevant training that moved beyond theory into practice.','Built facilitation plans, cohort operations, project-based assignments, and assessment frameworks.','Supported scalable learner outcomes and strengthened Learnexity reputation for practical digital education.', array['Digital Marketing','Training','Curriculum','Analytics'], 'Learnexity','Education Technology','Training Programs','#', null, true, true, '2025-08-01','/project-training.svg');
+insert into public.projects (title, slug, short_description, full_description, challenge, solution, results, technologies, client_name, industry, category, live_url, github_url, video_url, featured, published, completed_at, thumbnail_url) values
+('Igbo-Etiti Tech Hub Digital Enablement','igbo-etiti-tech-hub-digital-enablement','A civic technology and youth empowerment initiative for skills, innovation, and local digital transformation.','Program architecture and operational leadership for a public-sector tech hub designed to expand digital access, train young people, and support ICT adoption in local government.','Young people and public institutions needed a practical structure for skills development and technology adoption.','Designed program workflows, training tracks, community engagement systems, and stakeholder reporting rhythms.','Improved visibility for local innovation, created a platform for recurring digital skills programs, and strengthened ICT capacity.', array['Program Design','ICT Policy','Digital Literacy','Stakeholder Management'], 'Igbo-Etiti Local Government','Government','Government Projects','#', null, null, true, true, '2025-10-01','/project-government.svg'),
+('Learnexity Digital Skills Programs','learnexity-digital-skills-programs','Training systems for digital marketing, productivity, and employability-focused technology education.','End-to-end program leadership for technology and digital marketing learning experiences focused on practical capability, confidence, and career outcomes.','Learners needed structured, market-relevant training that moved beyond theory into practice.','Built facilitation plans, cohort operations, project-based assignments, and assessment frameworks.','Supported scalable learner outcomes and strengthened Learnexity reputation for practical digital education.', array['Digital Marketing','Training','Curriculum','Analytics'], 'Learnexity','Education Technology','Training Programs','#', null, null, true, true, '2025-08-01','/project-training.svg'),
+('SME Web Presence Transformation','sme-web-presence-transformation','Responsive business websites and digital growth foundations for Nigerian SMEs and personal brands.','A portfolio of web development engagements focused on helping entrepreneurs and organizations establish credible, searchable, conversion-ready online presences.','Many businesses had weak digital credibility, low discoverability, and fragmented customer journeys.','Delivered responsive websites, SEO metadata, lead forms, WhatsApp CTAs, analytics, and clear service storytelling.','Improved brand trust, simplified lead generation, and created reusable digital assets for client growth.', array['Next.js','WordPress','SEO','Analytics','WhatsApp'], 'Multiple Clients','SME','Web Development','#', '#', null, true, true, '2025-06-01','/project-web.svg'),
+('Digital Campaign Growth Systems','digital-campaign-growth-systems','Marketing strategy, content calendars, and measurement systems for education and enterprise campaigns.','Digital marketing operations built around audience clarity, campaign planning, compelling content, and measurable performance indicators.','Organizations needed consistent campaign execution and clearer reporting.','Created campaign calendars, social content systems, lead capture journeys, and performance dashboards.','Better audience engagement, stronger campaign discipline, and improved decision-making from analytics.', array['Content Strategy','Meta','Google Analytics','SEO','Email'], 'Education and Enterprise Clients','Digital Marketing','Digital Marketing','#', null, null, false, true, '2025-04-01','/project-marketing.svg');
 
 insert into public.certifications (name, issuer, date, description) values
 ('Digital Marketing Certification','Genesys Tech Hub','2023-01-01','Professional training in digital marketing strategy, campaign execution, content, and growth channels.'),
@@ -49,11 +56,10 @@ insert into public.blog_posts (title, slug, excerpt, content, category, tags, pu
 ('What Every SME Website Must Do','what-every-sme-website-must-do','A practical framework for building business websites that earn trust and generate qualified conversations.','A strong SME website should communicate credibility quickly, make the offer clear, answer common objections, and provide simple paths to contact.', 'Web Development', array['Web','SEO','Business'], '2026-02-10', true);
 
 insert into public.site_settings (site_title, tagline, email, phone, whatsapp_number, address, cv_url, hero_image_url)
-values ('Chinagolum Arinzechukwu Igwe', 'Empowering Individuals, Organizations, and Governments Through Technology, Education, and Innovation.', 'agolumarinze@gmail.com', '+2349048127607', '2349048127607', 'Enugu, Nigeria', '/chinagolum-igwe-cv.pdf', '/portrait.svg');
+values ('Chinagolum Arinzechukwu Igwe', 'Empowering Individuals, Organizations, and Governments Through Technology, Education, and Innovation.', 'agolumarinze@gmail.com', '09048127607', '09048127607', 'Enugu, Nigeria', 'https://drive.google.com/file/d/1vmj6s-yRqxFz4n5HHZyMWFE_MCgML67L/view?usp=drive_link', '/agolu-agolu.jpeg');
 
 insert into public.social_links (label, url, icon, sort_order) values
-('LinkedIn','#','Linkedin',1),
-('GitHub','#','Github',2),
-('X','#','Twitter',3),
-('Facebook','#','Facebook',4),
-('WhatsApp','https://wa.me/2349048127607','MessageCircle',5);
+('Instagram','https://www.instagram.com/ritzyagolum?igsh=OW00NHdhcmE5dnh5','Instagram',1),
+('Facebook','https://www.facebook.com/igwea','Facebook',2),
+('LinkedIn','#','Linkedin',3),
+('X','https://x.com/Ritzygeniusa','Twitter',4);

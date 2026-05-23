@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { profile, socialLinks } from "@/lib/data";
+import { getSocialLinks } from "@/lib/data";
+import type { Profile } from "@/types/content";
 
-export function Footer() {
+export function Footer({ profile }: { profile: Profile }) {
+  const socialLinks = getSocialLinks(profile);
   return (
     <footer className="border-t border-navy/10 bg-navy text-white dark:border-white/10">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-[1.2fr_.8fr_.8fr]">
         <div>
-          <p className="text-2xl font-black text-gold">Chinagolum Arinzechukwu Igwe</p>
+          <p className="text-2xl font-black text-gold">{profile.full_name}</p>
           <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">{profile.tagline}</p>
         </div>
         <div>

@@ -18,7 +18,7 @@ const nav = [
   ["Contact", "/contact"],
 ];
 
-export function Header() {
+export function Header({ calendlyUrl }: { calendlyUrl: string }) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
@@ -60,7 +60,7 @@ export function Header() {
             <Sun className="hidden size-5 dark:block" />
             <Moon className="size-5 dark:hidden" />
           </button>
-          <Button href="/contact">Book Consultation</Button>
+          <Button href={calendlyUrl}>Book Consultation</Button>
         </div>
 
         <button
@@ -85,7 +85,7 @@ export function Header() {
                 {label}
               </Link>
             ))}
-            <Button href="/contact" className="mt-2 w-full">
+            <Button href={calendlyUrl} className="mt-2 w-full">
               Book Consultation
             </Button>
           </nav>

@@ -1,19 +1,21 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { Section } from "@/components/site/section";
-import { achievements, profile } from "@/lib/data";
+import { achievements } from "@/lib/data";
+import { getProfile } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About",
   description: "Biography, mission, values, and professional journey of Chinagolum Arinzechukwu Igwe.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const profile = await getProfile();
   return (
     <>
       <Section eyebrow="About" title="A technology leader shaped by education, entrepreneurship, and public impact." description={profile.summary}>
         <div className="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-start">
-          <Image src={profile.portrait} alt="Chinagolum Arinzechukwu Igwe" width={900} height={1100} className="rounded-2xl bg-navy shadow-xl" />
+          <Image src={profile.portrait_url || "/portrait.svg"} alt={profile.full_name} width={900} height={1100} className="rounded-2xl bg-navy shadow-xl" />
           <div className="prose-content text-slate-700 dark:text-slate-300">
             <p>
               Chinagolum Arinzechukwu Igwe is a Nigerian technology leader, digital strategist, program manager,

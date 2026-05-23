@@ -2,19 +2,21 @@ import type { Metadata } from "next";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/site/section";
-import { achievements, certifications, profile, services } from "@/lib/data";
+import { achievements, certifications, services } from "@/lib/data";
+import { getProfile } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Resume",
   description: "Interactive CV for Chinagolum Arinzechukwu Igwe.",
 };
 
-export default function ResumePage() {
+export default async function ResumePage() {
+  const profile = await getProfile();
   return (
-    <Section eyebrow="Resume" title={profile.name} description={profile.summary}>
+    <Section eyebrow="Resume" title={profile.full_name} description={profile.summary}>
       <div className="mb-8 flex flex-wrap gap-3">
-        <Button href={profile.cvUrl}><Download className="size-4" /> Download PDF</Button>
-        <Button href="/contact" variant="outline">Request Consultation</Button>
+        <Button href={profile.cv_url}><Download className="size-4" /> Download PDF</Button>
+        <Button href={profile.calendly_url} variant="outline">Request Consultation</Button>
       </div>
       <div className="grid gap-8 lg:grid-cols-[1fr_.75fr]">
         <div className="rounded-lg border border-navy/10 bg-white p-7 dark:border-white/10 dark:bg-white/5">
