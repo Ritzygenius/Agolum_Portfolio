@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { deleteAdminRecord, deleteProjectImage, upsertAdminRecord } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -36,8 +37,10 @@ export function RecordManager({
   records: AdminRecord[];
   upload?: UploadConfig;
 }) {
+  const router = useRouter();
   const [editing, setEditing] = useState<AdminRecord | null>(records[0] || null);
   const [pending, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<{ ok: boolean; msg: string } | null>(null);
   const normalized = useMemo(() => records, [records]);
 
   function valueFor(field: AdminField) {
@@ -64,15 +67,21 @@ export function RecordManager({
             if (upload.galleryBucket) formData.set("_gallery_bucket", upload.galleryBucket);
           }
           startTransition(async () => {
-            await upsertAdminRecord(table, formData);
-            setEditing(null);
-            form.reset();
+            try {
+              await upsertAdminRecord(table, formData);
+              setFeedback({ ok: true, msg: editing?.id ? "Record updated." : "Record created." });
+              setEditing(null);
+              form.reset();
+              router.refresh();
+            } catch (e: any) {
+              setFeedback({ ok: false, msg: e?.message || "Save failed. Check console or RLS/bucket permissions." });
+            }
           });
         }}
       >
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xl font-black text-navy dark:text-white">{editing?.id ? "Edit Record" : "Create Record"}</h2>
-          <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-navy hover:bg-navy/5 dark:text-white dark:hover:bg-white/10">
+          <button type="button" onClick={() => { setEditing(null); setFeedback(null); }} className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-navy hover:bg-navy/5 dark:text-white dark:hover:bg-white/10">
             <Plus className="size-4" /> New
           </button>
         </div>
@@ -96,6 +105,9 @@ export function RecordManager({
           ))}
         </div>
         <Button disabled={pending} className="w-fit">{pending ? "Saving..." : editing?.id ? "Update Record" : "Create Record"}</Button>
+        {feedback && (
+          <p className={`text-sm font-semibold ${feedback.ok ? "text-emerald" : "text-red-600"}`}>{feedback.msg}</p>
+        )}
       </form>
 
       <div className="grid content-start gap-3">
@@ -107,11 +119,11 @@ export function RecordManager({
                 {"slug" in record && record.slug ? <p className="mt-1 text-xs text-slate-500">{record.slug}</p> : null}
               </div>
               <div className="flex gap-2">
-                <button type="button" onClick={() => setEditing(record)} aria-label="Edit" className="grid size-9 place-items-center rounded-md border border-navy/10 text-navy hover:border-gold dark:border-white/10 dark:text-white">
+                <button type="button" onClick={() => { setEditing(record); setFeedback(null); }} aria-label="Edit" className="grid size-9 place-items-center rounded-md border border-navy/10 text-navy hover:border-gold dark:border-white/10 dark:text-white">
                   <Pencil className="size-4" />
                 </button>
                 {record.id ? (
-                  <button type="button" onClick={() => startTransition(() => deleteAdminRecord(table, record.id!))} aria-label="Delete" className="grid size-9 place-items-center rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-400/30 dark:hover:bg-red-400/10">
+                  <button type="button" onClick={() => startTransition(async () => { await deleteAdminRecord(table, record.id!); router.refresh(); })} aria-label="Delete" className="grid size-9 place-items-center rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-400/30 dark:hover:bg-red-400/10">
                     <Trash2 className="size-4" />
                   </button>
                 ) : null}
@@ -122,7 +134,7 @@ export function RecordManager({
                 {record.project_images.map((image) => (
                   <div key={image.id || image.image_url} className="flex items-center justify-between gap-2 rounded-md bg-slate-50 px-3 py-2 dark:bg-white/5">
                     <span className="truncate text-xs text-slate-500">{image.image_url}</span>
-                    {image.id ? <button type="button" onClick={() => startTransition(() => deleteProjectImage(image.id!))} className="text-xs font-bold text-red-600">Delete</button> : null}
+                    {image.id ? <button type="button" onClick={() => startTransition(async () => { await deleteProjectImage(image.id!); router.refresh(); })} className="text-xs font-bold text-red-600">Delete</button> : null}
                   </div>
                 ))}
               </div>

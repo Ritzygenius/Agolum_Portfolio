@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { achievements, blogPosts, certifications, profile, projects, services, testimonials } from "@/lib/data";
 import type { Achievement, BlogPost, Certification, Profile, Project, Service, Testimonial } from "@/types/content";
 
-function hasSupabaseEnv() {
+export function hasSupabaseEnv() {
   return Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
       (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
@@ -22,7 +22,17 @@ export async function getProfile() {
   const supabase = await createClient();
   const { data, error } = await supabase.from("profiles").select("*").limit(1).maybeSingle();
   if (error || !data) return profile;
-  return { ...profile, ...(data as Partial<Profile>) };
+  // Sanitize to ensure no nulls for required UI string fields (prevents crashes and bad renders)
+  const safe = { ...profile, ...(data as Partial<Profile>) };
+  const stringFields: (keyof Profile)[] = [
+    "full_name", "professional_title", "tagline", "summary", "portrait_url", "cv_url",
+    "calendly_url", "email", "phone", "whatsapp_number", "nationality", "location",
+    "instagram_url", "facebook_url", "linkedin_url", "x_url",
+  ];
+  for (const key of stringFields) {
+    if (!safe[key]) (safe as any)[key] = (profile as any)[key] || "";
+  }
+  return safe;
 }
 
 export const getProjects = () => readTable<Project>("projects", projects, "completed_at", "*, project_images(*)");

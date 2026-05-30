@@ -60,7 +60,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const liveProfile = await getProfile();
-  const whatsappDigits = liveProfile.whatsapp_number.replace(/\D/g, "");
+  const whatsappDigits = (liveProfile.whatsapp_number || "").replace(/\D/g, "");
 
   return (
     <html
@@ -73,13 +73,15 @@ export default async function RootLayout({
           <Header calendlyUrl={liveProfile.calendly_url} />
           <main>{children}</main>
           <Footer profile={liveProfile} />
-          <a
-            href={`https://wa.me/${whatsappDigits}`}
-            className="fixed bottom-5 right-5 z-50 rounded-md bg-emerald px-4 py-3 text-sm font-black text-white shadow-2xl shadow-emerald/30 transition hover:bg-[#0ea371]"
-            aria-label="Chat on WhatsApp"
-          >
-            WhatsApp
-          </a>
+          {whatsappDigits && (
+            <a
+              href={`https://wa.me/${whatsappDigits}`}
+              className="fixed bottom-5 right-5 z-50 rounded-md bg-emerald px-4 py-3 text-sm font-black text-white shadow-2xl shadow-emerald/30 transition hover:bg-[#0ea371]"
+              aria-label="Chat on WhatsApp"
+            >
+              WhatsApp
+            </a>
+          )}
         </Providers>
       </body>
     </html>

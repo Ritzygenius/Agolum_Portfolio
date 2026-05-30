@@ -1,5 +1,7 @@
 import { AdminNav } from "@/components/admin/admin-nav";
+import { createClient } from "@/lib/supabase/server";
 import { blogPosts, achievements, certifications, projects, services, testimonials } from "@/lib/data";
+import { hasSupabaseEnv } from "@/lib/content";
 
 const stats = [
   ["Projects", projects.length],
@@ -10,7 +12,17 @@ const stats = [
   ["Blog Posts", blogPosts.length],
 ];
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  let messageCount = 0;
+  if (hasSupabaseEnv()) {
+    try {
+      const supabase = await createClient();
+      const { count } = await supabase.from("contact_messages").select("*", { count: "exact", head: true });
+      messageCount = count || 0;
+    } catch {
+      // ignore, keep 0
+    }
+  }
   return (
     <section className="px-5 py-12">
       <div className="mx-auto max-w-7xl">
@@ -25,7 +37,7 @@ export default function AdminDashboardPage() {
             </div>
           ))}
           <div className="rounded-lg border border-navy/10 bg-white p-6 dark:border-white/10 dark:bg-white/5">
-            <p className="text-4xl font-black text-gold">0</p>
+            <p className="text-4xl font-black text-gold">{messageCount}</p>
             <p className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-300">Total Contact Messages</p>
           </div>
         </div>

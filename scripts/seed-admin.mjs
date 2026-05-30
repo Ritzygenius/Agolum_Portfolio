@@ -97,7 +97,7 @@ if (existingSettings?.id) {
   await supabase.from("site_settings").insert(settings);
 }
 
-const buckets = ["profile-images", "project-images", "certificates", "resumes", "testimonials"];
+const buckets = ["profile-images", "project-images", "blog-images", "certificates", "resumes", "testimonials"];
 for (const bucket of buckets) {
   const { error } = await supabase.storage.createBucket(bucket, { public: true });
   if (error && !error.message.toLowerCase().includes("already")) throw error;
