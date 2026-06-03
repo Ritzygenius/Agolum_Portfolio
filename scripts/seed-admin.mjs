@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
+import ws from "ws";
 
 function loadEnvFile(path) {
   if (!existsSync(path)) return;
@@ -28,6 +29,9 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
+  },
+  realtime: {
+    transport: ws,
   },
 });
 

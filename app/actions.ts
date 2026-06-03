@@ -68,6 +68,12 @@ export async function upsertAdminRecord(table: string, formData: FormData) {
     if (key === "technologies" || key === "tags") payload[key] = String(value || "").split(",").map((item) => item.trim()).filter(Boolean);
   }
 
+  // Strip null values from all payloads — prevents schema errors when optional columns
+  // haven't been added to the live DB yet (e.g. video_url, social link columns)
+  for (const key of Object.keys(payload)) {
+    if (payload[key] === null || payload[key] === undefined) delete payload[key];
+  }
+
   const supabase = await createClient();
   if (uploadBucket && uploadField && uploadTarget) {
     const file = formData.get(uploadField);
@@ -77,24 +83,31 @@ export async function upsertAdminRecord(table: string, formData: FormData) {
   }
 
   type MutableTable = {
-    update: (record: Record<string, unknown>) => { eq: (column: string, value: string) => { select: (columns: string) => { single: () => Promise<{ data: { id: string } | null }> } } };
-    insert: (record: Record<string, unknown>) => { select: (columns: string) => { single: () => Promise<{ data: { id: string } | null }> } };
+    update: (record: Record<string, unknown>) => { eq: (column: string, value: string) => { select: (columns: string) => { single: () => Promise<{ data: { id: string } | null; error: { message: string } | null }> } } };
+    insert: (record: Record<string, unknown>) => { select: (columns: string) => { single: () => Promise<{ data: { id: string } | null; error: { message: string } | null }> } };
   };
   const mutable = supabase.from(table as "projects") as unknown as MutableTable;
-  const { data } = id
+  const { data, error: dbError } = id
     ? await mutable.update(payload).eq("id", id).select("id").single()
     : await mutable.insert(payload).select("id").single();
+  if (dbError) throw new Error(dbError.message);
 
   const recordId = id || data?.id;
   const galleryFiles = formData.getAll("gallery_files").filter((file): file is File => file instanceof File && file.size > 0);
   if (table === "projects" && recordId && galleryBucket && galleryFiles.length) {
-    const records = await Promise.all(galleryFiles.map(async (file, index) => ({
+    const imageUrls = await Promise.all(galleryFiles.map((file) => uploadPublicFile(galleryBucket, file)));
+    const records = imageUrls.map((image_url, index) => ({
       project_id: recordId,
-      image_url: await uploadPublicFile(galleryBucket, file),
+      image_url,
       alt: String(payload.title || "Project image"),
       sort_order: index,
-    })));
+    }));
     await supabase.from("project_images").insert(records);
+
+    // Auto-set thumbnail_url from the first gallery image if no explicit thumbnail was provided
+    if (!payload[uploadTarget] && imageUrls[0]) {
+      await (supabase.from("projects" as "projects") as any).update({ thumbnail_url: imageUrls[0] }).eq("id", recordId);
+    }
   }
 
   revalidatePath("/admin");

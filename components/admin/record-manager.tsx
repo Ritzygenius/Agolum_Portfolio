@@ -38,7 +38,7 @@ export function RecordManager({
   upload?: UploadConfig;
 }) {
   const router = useRouter();
-  const [editing, setEditing] = useState<AdminRecord | null>(records[0] || null);
+  const [editing, setEditing] = useState<AdminRecord | null>(null);
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{ ok: boolean; msg: string } | null>(null);
   const normalized = useMemo(() => records, [records]);
@@ -87,19 +87,31 @@ export function RecordManager({
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {fields.map((field) => (
-            <label key={field.name} className={field.type === "textarea" ? "grid gap-2 md:col-span-2" : "grid gap-2"}>
+            <label
+              key={field.name}
+              className={
+                field.type === "textarea" || field.type === "file"
+                  ? "grid min-w-0 gap-2 md:col-span-2"
+                  : "grid min-w-0 gap-2"
+              }
+            >
               <span className="text-sm font-bold text-navy dark:text-white">{field.label}</span>
               {field.type === "textarea" ? (
-                <textarea name={field.name} rows={5} defaultValue={String(valueFor(field))} placeholder={field.placeholder} className="rounded-md border border-slate-200 px-4 py-3 outline-none focus:border-gold dark:border-white/10 dark:bg-navy" />
+                <textarea name={field.name} rows={5} defaultValue={String(valueFor(field))} placeholder={field.placeholder} className="w-full rounded-md border border-slate-200 px-4 py-3 outline-none focus:border-gold dark:border-white/10 dark:bg-navy" />
               ) : field.type === "checkbox" ? (
                 <>
                   <input type="hidden" name={field.name} value="off" />
                   <input name={field.name} type="checkbox" defaultChecked={Boolean(valueFor(field))} className="size-5 accent-emerald" />
                 </>
               ) : field.type === "file" ? (
-                <input name={field.name} type="file" multiple={field.name === "gallery_files"} accept="image/*" className="rounded-md border border-slate-200 px-4 py-3 text-sm outline-none file:mr-4 file:rounded-md file:border-0 file:bg-navy file:px-3 file:py-2 file:text-white focus:border-gold dark:border-white/10 dark:bg-navy" />
+                <div className="grid gap-1">
+                  <input name={field.name} type="file" multiple={field.name === "gallery_files"} accept="image/*" className="w-full rounded-md border border-slate-200 px-4 py-3 text-sm outline-none file:mr-4 file:rounded-md file:border-0 file:bg-navy file:px-3 file:py-2 file:text-white focus:border-gold dark:border-white/10 dark:bg-navy" />
+                  {field.name === "gallery_files" && (
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Hold Ctrl (or Cmd on Mac) to select up to 5 images at once</p>
+                  )}
+                </div>
               ) : (
-                <input name={field.name} type={field.type || "text"} defaultValue={String(valueFor(field))} placeholder={field.placeholder} className="rounded-md border border-slate-200 px-4 py-3 outline-none focus:border-gold dark:border-white/10 dark:bg-navy" />
+                <input name={field.name} type={field.type || "text"} defaultValue={String(valueFor(field))} placeholder={field.placeholder} className="w-full min-w-0 rounded-md border border-slate-200 px-4 py-3 outline-none focus:border-gold dark:border-white/10 dark:bg-navy" />
               )}
             </label>
           ))}

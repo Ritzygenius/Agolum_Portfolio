@@ -27,6 +27,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) notFound();
+  const mainImage = project.thumbnail_url || project.project_images?.[0]?.image_url;
 
   const schema = {
     "@context": "https://schema.org",
@@ -54,7 +55,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       </section>
       <section className="px-5 py-16">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.95fr_1.05fr]">
-          <Image src={project.thumbnail_url} alt="" width={900} height={640} className="rounded-2xl border border-navy/10 bg-white shadow-sm" />
+          {mainImage ? (
+            <Image src={mainImage} alt={project.title} width={900} height={640} className="rounded-2xl border border-navy/10 bg-white shadow-sm object-cover" />
+          ) : (
+            <div className="rounded-2xl border border-navy/10 bg-slate-100 dark:border-white/10 dark:bg-navy/40 aspect-[16/10]" />
+          )}
           <div className="grid gap-6">
             {[
               ["Challenge", project.challenge],
