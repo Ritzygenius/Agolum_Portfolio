@@ -29,46 +29,39 @@ export const metrics = [
 
 export const achievements: Achievement[] = [
   {
+    title: "Senior Special Assistant (SSA) on ICT",
+    organization: "Igbo-Etiti Local Government Area",
+    description: "Advises local government leadership on digital transformation, ICT policy, and public-sector technology adoption.",
+    icon: "Landmark",
+    year: "Jun 2025 – Present",
+  },
+  {
     title: "Head of Programs",
-    organization: "Learnexity",
+    organization: "Learnexity, Nexavaluable Enterprise",
     description: "Leads program strategy, cohort delivery, learning operations, and innovation-focused training experiences.",
     icon: "Network",
-    year: "Current",
+    year: "May 2025 – Feb 2026",
   },
   {
     title: "Digital Marketing Facilitator",
-    organization: "Learnexity",
+    organization: "Learnexity, Nexavaluable Enterprise",
     description: "Trains learners and teams in digital growth strategy, content systems, campaign planning, and analytics.",
     icon: "Megaphone",
-    year: "Current",
-  },
-  {
-    title: "Senior Special Assistant on ICT",
-    organization: "Igbo-Etiti LGA",
-    description: "Advises local government leadership on digital transformation, ICT policy, and public-sector technology adoption.",
-    icon: "Landmark",
-    year: "Current",
+    year: "Aug 2025 – Feb 2026",
   },
   {
     title: "Manager",
     organization: "Igbo-Etiti Tech Hub",
     description: "Coordinates hub operations, digital skills development, community innovation, and youth empowerment initiatives.",
     icon: "Cpu",
-    year: "Current",
+    year: "Jun 2023 – Present",
   },
   {
     title: "Programs Delivery Manager",
     organization: "Career Crest Edu",
     description: "Managed education programs, training delivery systems, and learner outcomes for professional development cohorts.",
     icon: "GraduationCap",
-    year: "Leadership",
-  },
-  {
-    title: "CEO",
-    organization: "RitzyGenius Enterprise",
-    description: "Builds digital products, consulting engagements, and entrepreneurial programs for organizations and individuals.",
-    icon: "BriefcaseBusiness",
-    year: "Founder",
+    year: "Nov 2022 – May 2023",
   },
 ];
 
