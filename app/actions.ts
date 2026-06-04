@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const contactSchema = z.object({
   name: z.string().min(2),
@@ -74,11 +75,15 @@ export async function upsertAdminRecord(table: string, formData: FormData) {
     if (payload[key] === null || payload[key] === undefined) delete payload[key];
   }
 
+  // Use session client for DB writes (respects RLS + audit) and
+  // admin client for storage uploads (bypasses storage RLS reliably).
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
+
   if (uploadBucket && uploadField && uploadTarget) {
     const file = formData.get(uploadField);
     if (file instanceof File && file.size > 0) {
-      payload[uploadTarget] = await uploadPublicFile(uploadBucket, file);
+      payload[uploadTarget] = await uploadPublicFile(adminSupabase, uploadBucket, file);
     }
   }
 
@@ -90,19 +95,27 @@ export async function upsertAdminRecord(table: string, formData: FormData) {
   const { data, error: dbError } = id
     ? await mutable.update(payload).eq("id", id).select("id").single()
     : await mutable.insert(payload).select("id").single();
-  if (dbError) throw new Error(dbError.message);
+  if (dbError) {
+    console.error(`[upsertAdminRecord] DB error on table "${table}":`, dbError);
+    throw new Error(dbError.message);
+  }
 
   const recordId = id || data?.id;
   const galleryFiles = formData.getAll("gallery_files").filter((file): file is File => file instanceof File && file.size > 0);
   if (table === "projects" && recordId && galleryBucket && galleryFiles.length) {
-    const imageUrls = await Promise.all(galleryFiles.map((file) => uploadPublicFile(galleryBucket, file)));
+    const imageUrls = await Promise.all(
+      galleryFiles.map((file) => uploadPublicFile(adminSupabase, galleryBucket, file))
+    );
     const records = imageUrls.map((image_url, index) => ({
       project_id: recordId,
       image_url,
       alt: String(payload.title || "Project image"),
       sort_order: index,
     }));
-    await supabase.from("project_images").insert(records);
+    const { error: galleryError } = await supabase.from("project_images").insert(records);
+    if (galleryError) {
+      console.error("[upsertAdminRecord] Gallery insert error:", galleryError);
+    }
 
     // Auto-set thumbnail_url from the first gallery image if no explicit thumbnail was provided
     if (!payload[uploadTarget] && imageUrls[0]) {
@@ -132,16 +145,22 @@ export async function deleteProjectImage(id: string) {
   revalidatePath("/projects");
 }
 
-async function uploadPublicFile(bucket: string, file: File) {
-  const supabase = await createClient();
+async function uploadPublicFile(
+  client: ReturnType<typeof createAdminClient>,
+  bucket: string,
+  file: File,
+) {
   const extension = file.name.split(".").pop() || "bin";
   const path = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage.from(bucket).upload(path, file, {
+  const { error } = await client.storage.from(bucket).upload(path, file, {
     cacheControl: "3600",
     upsert: false,
     contentType: file.type || undefined,
   });
-  if (error) throw new Error(error.message);
-  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  if (error) {
+    console.error(`[uploadPublicFile] Storage upload failed (bucket: "${bucket}"):`, error);
+    throw new Error(`Storage upload failed: ${error.message}`);
+  }
+  const { data } = client.storage.from(bucket).getPublicUrl(path);
   return data.publicUrl;
 }
