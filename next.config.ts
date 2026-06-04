@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   outputFileTracingRoot: process.cwd(),
   eslint: {
     // Prevent lint config issues (e.g. flat config compatibility) from blocking production builds.
